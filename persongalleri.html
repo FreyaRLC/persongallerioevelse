@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>json fetch med url</title>
+    <style>
+      * {
+        padding:0;
+        margin:0;
+        box-sizing: border-box;
+      }
+
+      img{
+        max-width: 100%;
+      }
+
+      section{
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      }
+
+      .persongrid {
+        border: 2px solid rgb(34, 53, 95);
+        margin: 10px;
+        padding: 10px;  
+        background-color: rgb(236, 236, 236);
+      }
+
+      body{
+        background:rgb(83, 105, 153);
+      } 
+
+      
+
+      .persongrid img{
+        width:500px;
+        aspect-ratio: 1;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <section></section>
+
+    <template>
+      <article class="persongrid">
+        <h2></h2>
+        <p class="full-name"></p>
+        <p class="email"></p>
+        <img src="" alt="" />
+      </article>
+    </template>
+
+    <script>
+      const container = document.querySelector("section");
+      const temp = document.querySelector("template");
+      const url = "https://tema07-3209.restdb.io/rest/medlemmer";
+
+      const options = {
+        headers: {
+          "x-apikey": "61fcf7e43f215f310a37be59",
+        },
+      };
+
+      async function hentData() {
+        const result = await fetch(url, options);
+        const json = await result.json();
+        vis(json);
+      }
+
+      function vis(personListe) {
+        // console.log(personListe);
+        personListe.forEach((person) => {
+          const klon = temp.cloneNode(true).content;
+          klon.querySelector("h2").textContent = person.fornavn;
+          klon.querySelector(".full-name").textContent = `${person.fornavn} ${person.efternavn}`;
+          klon.querySelector(".email").textContent = person.email;
+          klon.querySelector("img").src = `faces/${person.profilbillede}`;
+          // klon.querySelector("img").textContent = person.billede;
+          container.appendChild(klon);
+        });
+      }
+
+      hentData();
+    </script>
+  </body>
+</html>
